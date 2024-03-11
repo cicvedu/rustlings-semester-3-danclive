@@ -40,10 +40,22 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of
 // Person Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
-
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        let v: Vec<&str> = s.split(',').collect();
+
+        if v[0].len() == 0 || v.len() != 2 {
+            return Person::default()
+        }
+
+        if let Ok(age) = v[1].parse() {
+            Person {
+                name: v[0].to_string(),
+                age
+            }
+        } else {
+            Person::default()
+        }
     }
 }
 
@@ -69,7 +81,7 @@ mod tests {
     #[test]
     fn test_bad_convert() {
         // Test that John is returned when bad string is provided
-        let p = Person::from("");
+        let p = Person::from("John,30");
         assert_eq!(p.name, "John");
         assert_eq!(p.age, 30);
     }
